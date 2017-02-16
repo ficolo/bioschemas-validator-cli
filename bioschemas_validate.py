@@ -32,9 +32,16 @@ def validate_url(site_url):
     for item in data:
         if item['type'] in settings.supported_types:
             pretty_item = json.dumps(item, indent=4, sort_keys=True)
-            pretty_validation = json.dumps(validate_item(item), indent=4, sort_keys=True)
-            click.secho('ITEM RETRIEVED: ' + str(pretty_item), fg='blue')
-            click.secho('VALIDATION OUTPUT: ' + str(pretty_validation), fg='red', bold=True)
+            validation = validate_item(item)
+            click.secho('ITEM RETRIEVED', fg='blue', bold=True)
+            click.secho(str(pretty_item), fg='blue')
+            click.secho('VALIDATION FULL REPORT', fg='green', bold=True)
+            for line in validation['full_report'].split('\n'):
+                if 'ERROR' in line:
+                    color = 'red'
+                else:
+                    color = 'yellow'
+                click.secho(line, fg=color)
 
 
 @click.command()
